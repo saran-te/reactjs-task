@@ -13,7 +13,6 @@ const simpleComp = p => {
   return(
     <>
     <button onClick={() => alert(`${p.value}`)}>{p.btnName}</button>
-    <p>{p.value}</p>
     </>
   )
 }
@@ -44,14 +43,15 @@ const GridDisplay = (props) => {
       headerCheckboxSelection: true,
       checkboxSelection: true,
       showDisabledCheckboxes: true,},
-    {field: 'username', lockPosition: true, colSpan: p => p.data.username === "Bret" ? 2 : 1},
+    {field: 'username', colSpan: p => p.data.username === "Bret" ? 2 : 1},
     {field: 'email', cellRenderer: simpleComp, cellRendererParams: {btnName: 'See'}},
     {field: 'website', rowSpan: p => p.data.id === 7 ? 2 : 1},
     {headerName: 'Address',
+      colId: 'address',
       children: [
-        {headerName: 'Street',field: 'address.street'},
-        {headerName: 'City',field: 'address.city'},
-        {headerName: 'Zipcode',field: 'address.zipcode', filter: 'agNumberColumnFilter'}
+        {headerName: 'Street',field: 'address.street', colId:"street"},
+        {headerName: 'City',field: 'address.city', colId:"city"},
+        {headerName: 'Zipcode',field: 'address.zipcode', colId:"zipcode", filter: 'agNumberColumnFilter'}
       ]
     }
     
@@ -109,7 +109,8 @@ const GridDisplay = (props) => {
       buttons: ['reset', 'apply'],
       debounceMs: 0
     },
-    floatingFilter: true
+    floatingFilter: true,
+    enableRowGroup: true
   }), []);
 
   const isRowSelectable = useMemo(() => {
@@ -135,11 +136,80 @@ const GridDisplay = (props) => {
     gridRef.current.api.deselectAll();
   }
 
+  // const onBtnGrpEmailWebsite = () => {
+  //   gridRef.current.columnApi.applyColumnState({
+  //     state: [
+  //       { colId: 'email', rowGroupIndex: 0 },
+  //       { colId: 'website', rowGroupIndex: 1 },
+  //     ],
+  //     defaultState: { rowGroup: false },
+  //   });
+  // }
+
+  const removeEmailBtn = () => {
+    gridRef.current.columnApi.applyColumnState({
+      state: [
+        {colId: 'email', hide: true}
+      ]
+    });
+  }
+
+  const showEmailBtn = () => {
+    gridRef.current.columnApi.applyColumnState({
+      state: [
+        {colId: 'email', hide: false}
+      ]
+    });
+  }
+
+
+  const saveState = () => {
+    window.colState = gridRef.current.columnApi.getColumnState();
+    console.log('column state saved');
+  }
+
+  const restoreState = () => {
+    gridRef.current.columnApi.applyColumnState({
+      state: window.colState,
+      applyOrder: true
+    });
+  }
+
+  const resetState = () => {
+    gridRef.current.columnApi.resetColumnState();
+  }
+
+  const idToLastBtn = () => {
+    gridRef.current.columnApi.applyColumnState({
+      state: [
+        {colId: 'name'},
+        {colId: 'username'},
+        {colId: 'email'},
+        {colId: 'website'},
+        {colId: 'street'},
+        {colId: 'city'},
+        {colId: 'zipcode'},
+        {colId: 'id'},
+
+      ],
+      applyOrder: true
+    });
+  }
+
+
   return (
         <>
+          <button type='button' onClick={saveState}>Save State</button>
+          <button type='button' onClick={restoreState}>Restore State</button>
+          <button type='button' onClick={resetState}>Reset State</button>
           <button type='button' onClick={onSaveBtn}>Save Filter</button>
-          <button type='button' onClick={onApplyBtn}>Apply Filter</button>
+          <button type='button' onClick={onApplyBtn}>Restore Filter</button>
           <button type='button' onClick={onDeselectBtn}>Deselect All</button>
+          <button type='button' onClick={removeEmailBtn}>Remove Email</button>
+          <button type='button' onClick={showEmailBtn}>Show Email</button>
+          <button type='button' onClick={idToLastBtn}>ID to Last</button>
+          {/* <button type='button' onClick={onBtnGrpEmailWebsite}>Group Email - Website</button> */}
+       
           <div className="ag-theme-alpine" style={{width: 1200, height: 1000}}>
             <AgGridReact ref={gridRef} 
             columnDefs={columnDefs} 
