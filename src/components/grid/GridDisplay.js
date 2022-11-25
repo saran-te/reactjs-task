@@ -39,10 +39,11 @@ const GridDisplay = (props) => {
   const floatingFiltersHeight = 70;
 
   const [columnDefs, setColumnDefs] = useState([
-    {field: 'name', width: 150, resizable: true, pinned: 'left', lockPinned: true, filter: 'agTextColumnFilter'},
+    { headerName: 'Row ID', field: 'id', valueGetter: 'node.id' },
+    {field: 'name', width: 150, resizable: true, pinned: 'left', lockPinned: true, filter: 'agTextColumnFilter',  rowDrag: true},
     {field: 'username', lockPosition: true, colSpan: p => p.data.username === "Bret" ? 2 : 1},
     {field: 'email', cellRenderer: simpleComp, cellRendererParams: {btnName: 'See'}},
-    {field: 'website'},
+    {field: 'website', rowSpan: p => p.data.id === 7 ? 2 : 1},
     {headerName: 'Address',
       children: [
         {headerName: 'Street',field: 'address.street'},
@@ -76,6 +77,11 @@ const GridDisplay = (props) => {
   //   fetchUser();
   
   //  }, []);
+
+
+  const getRowId = useMemo(() => {
+    return (params) => params.data.id;
+  }, []);
 
 
   useEffect(() => {
@@ -134,7 +140,10 @@ const GridDisplay = (props) => {
             animateRows={true}
             headerHeight={headerHeight}
             groupHeaderHeight={groupHeaderHeight}
-            floatingFiltersHeight={floatingFiltersHeight}>
+            floatingFiltersHeight={floatingFiltersHeight}
+            getRowId={getRowId}
+            suppressRowTransform={true}
+            rowDragManaged={true}>
        
             </AgGridReact>
             
