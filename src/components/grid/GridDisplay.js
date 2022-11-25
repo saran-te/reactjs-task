@@ -34,9 +34,13 @@ const GridDisplay = (props) => {
   const [rowData, setRowData] = useState([]);
   const gridRef = useRef();
 
+  const headerHeight = 100;
+  const groupHeaderHeight = 25;
+  const floatingFiltersHeight = 70;
+
   const [columnDefs, setColumnDefs] = useState([
     {field: 'name', width: 150, resizable: true, pinned: 'left', lockPinned: true, filter: 'agTextColumnFilter'},
-    {field: 'username', lockPosition: true},
+    {field: 'username', lockPosition: true, colSpan: p => p.data.username === "Bret" ? 2 : 1},
     {field: 'email', cellRenderer: simpleComp, cellRendererParams: {btnName: 'See'}},
     {field: 'website'},
     {headerName: 'Address',
@@ -48,6 +52,12 @@ const GridDisplay = (props) => {
     }
     
   ]);
+
+  // const Sidebar = useMemo(() => {
+  //   return {
+  //     toolPanels: ['column'],
+  //   }
+  // }, [])
 
   // useEffect(() => {
   //  props.fetchData();
@@ -116,7 +126,17 @@ const GridDisplay = (props) => {
           <button type='button' onClick={onApplyBtn}>Apply</button>
           <button type='button' onClick={onDeselectBtn}>Deselect All</button>
           <div className="ag-theme-alpine" style={{width: 1200, height: 1000}}>
-            <AgGridReact ref={gridRef} columnDefs={columnDefs} rowData={rowData} defaultColDef={defaultColDef} rowSelection={'multiple'} animateRows={true}></AgGridReact>
+            <AgGridReact ref={gridRef} 
+            columnDefs={columnDefs} 
+            rowData={rowData} 
+            defaultColDef={defaultColDef} 
+            rowSelection={'multiple'} 
+            animateRows={true}
+            headerHeight={headerHeight}
+            groupHeaderHeight={groupHeaderHeight}
+            floatingFiltersHeight={floatingFiltersHeight}>
+       
+            </AgGridReact>
             
           </div>
       
