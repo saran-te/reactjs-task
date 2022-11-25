@@ -40,7 +40,10 @@ const GridDisplay = (props) => {
 
   const [columnDefs, setColumnDefs] = useState([
     { headerName: 'Row ID', field: 'id', valueGetter: 'node.id' },
-    {field: 'name', width: 150, resizable: true, pinned: 'left', lockPinned: true, filter: 'agTextColumnFilter',  rowDrag: true},
+    {field: 'name', width: 150, resizable: true, pinned: 'left', lockPinned: true, filter: 'agTextColumnFilter',  rowDrag: true,
+      headerCheckboxSelection: true,
+      checkboxSelection: true,
+      showDisabledCheckboxes: true,},
     {field: 'username', lockPosition: true, colSpan: p => p.data.username === "Bret" ? 2 : 1},
     {field: 'email', cellRenderer: simpleComp, cellRendererParams: {btnName: 'See'}},
     {field: 'website', rowSpan: p => p.data.id === 7 ? 2 : 1},
@@ -109,6 +112,12 @@ const GridDisplay = (props) => {
     floatingFilter: true
   }), []);
 
+  const isRowSelectable = useMemo(() => {
+    return (params) => {
+      return params.data.id % 2 === 0;
+    };
+  }, []);
+
   const savedFilterState = useRef();
 
   const onSaveBtn = () => {
@@ -128,8 +137,8 @@ const GridDisplay = (props) => {
 
   return (
         <>
-          <button type='button' onClick={onSaveBtn}>Save</button>
-          <button type='button' onClick={onApplyBtn}>Apply</button>
+          <button type='button' onClick={onSaveBtn}>Save Filter</button>
+          <button type='button' onClick={onApplyBtn}>Apply Filter</button>
           <button type='button' onClick={onDeselectBtn}>Deselect All</button>
           <div className="ag-theme-alpine" style={{width: 1200, height: 1000}}>
             <AgGridReact ref={gridRef} 
@@ -143,7 +152,9 @@ const GridDisplay = (props) => {
             floatingFiltersHeight={floatingFiltersHeight}
             getRowId={getRowId}
             suppressRowTransform={true}
-            rowDragManaged={true}>
+            rowDragManaged={true}
+            rowMultiSelectWithClick={true}
+            isRowSelectable={isRowSelectable}>
        
             </AgGridReact>
             
