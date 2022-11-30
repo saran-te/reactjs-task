@@ -324,8 +324,8 @@ const GridDisplay = (props) => {
           rowDragManaged={true}
           rowMultiSelectWithClick={true}
           isRowSelectable={isRowSelectable}
-          loadingCellRenderer={loadingCellRenderer}
-          loadingCellRendererParams={loadingCellRendererParams}
+          // loadingCellRenderer={loadingCellRenderer}
+          // loadingCellRendererParams={loadingCellRendererParams}
         ></AgGridReact>
       </div>
     </>
