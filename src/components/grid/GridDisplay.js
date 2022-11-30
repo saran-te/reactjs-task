@@ -6,6 +6,7 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 // import store from '../../redux/store';
 import axios from "axios";
+import CustomLoadingCellRenderer from "./CustomLoadingCellRenderer";
 
 const simpleComp = (p) => {
   console.log(p.btnName);
@@ -255,6 +256,15 @@ const GridDisplay = (props) => {
     });
   };
 
+  const loadingCellRenderer = useMemo(() => {
+    return CustomLoadingCellRenderer;
+  }, []);
+  const loadingCellRendererParams = useMemo(() => {
+    return {
+      loadingMessage: "One moment please...",
+    };
+  }, []);
+
   return (
     <>
       <button type="button" onClick={saveState}>
@@ -314,6 +324,8 @@ const GridDisplay = (props) => {
           rowDragManaged={true}
           rowMultiSelectWithClick={true}
           isRowSelectable={isRowSelectable}
+          loadingCellRenderer={loadingCellRenderer}
+          loadingCellRendererParams={loadingCellRendererParams}
         ></AgGridReact>
       </div>
     </>

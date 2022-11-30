@@ -1,16 +1,16 @@
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-alpine.css';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { AgGridReact } from 'ag-grid-react';
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-alpine.css";
+import React, { useCallback, useMemo, useRef, useState } from "react";
+import { AgGridReact } from "ag-grid-react";
 // import 'ag-grid-enterprise';
 
 // creates a unique symbol, eg 'ADG' or 'ZJD'
 function createUniqueRandomSymbol(data) {
   let symbol;
-  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   let isUnique = false;
   while (!isUnique) {
-    symbol = '';
+    symbol = "";
     // create symbol
     for (let i = 0; i < 3; i++) {
       symbol += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -36,7 +36,7 @@ function getInitialData() {
 
 function createItem(data) {
   const item = {
-    group: ['A', 'B', 'C'][Math.floor(Math.random() * 3)],
+    group: ["A", "B", "C"][Math.floor(Math.random() * 3)],
     symbol: createUniqueRandomSymbol(data),
     price: Math.floor(Math.random() * 100),
   };
@@ -70,16 +70,16 @@ function createItem(data) {
 
 const GridDataUpdate = () => {
   const gridRef = useRef(null);
-  const containerStyle = useMemo(() => ({ width: '100%', height: '100%' }), []);
+  const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
   // const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
   const [rowData, setRowData] = useState(getInitialData());
 
-    // console.log(rowData)
+  // console.log(rowData)
 
   const [columnDefs, setColumnDefs] = useState([
-    { headerName: 'Symbol', field: 'symbol' },
-    { headerName: 'Price', field: 'price' },
-    { headerName: 'Group', field: 'group' , editable: false},
+    { headerName: "Symbol", field: "symbol" },
+    { headerName: "Price", field: "price" },
+    { headerName: "Group", field: "group", editable: false },
   ]);
   const defaultColDef = useMemo(() => {
     return {
@@ -90,25 +90,25 @@ const GridDataUpdate = () => {
       enableCellChangeFlash: true,
     };
   }, []);
-//   const autoGroupColumnDef = useMemo(() => {
-//     return {
-//       headerName: 'Symbol',
-//       cellRenderer: 'agGroupCellRenderer',
-//       field: 'symbol',
-//     };
-//   }, []);
-//   const statusBar = useMemo(() => {
-//     return {
-//       statusPanels: [{ statusPanel: 'agAggregationComponent', align: 'right' }],
-//     };
-//   }, []);
+  //   const autoGroupColumnDef = useMemo(() => {
+  //     return {
+  //       headerName: 'Symbol',
+  //       cellRenderer: 'agGroupCellRenderer',
+  //       field: 'symbol',
+  //     };
+  //   }, []);
+  //   const statusBar = useMemo(() => {
+  //     return {
+  //       statusPanels: [{ statusPanel: 'agAggregationComponent', align: 'right' }],
+  //     };
+  //   }, []);
   const getRowId = useCallback(function (params) {
     return params.data.symbol;
   }, []);
 
-//   const onGridReady = useCallback((params) => {
-//     setGroupingEnabled(false, params.columnApi);
-//   }, []);
+  //   const onGridReady = useCallback((params) => {
+  //     setGroupingEnabled(false, params.columnApi);
+  //   }, []);
 
   const addFiveItems = useCallback(
     (append) => {
@@ -139,8 +139,6 @@ const GridDataUpdate = () => {
     });
     setRowData(filteredData);
   }, [rowData]);
-
-
 
   const setSelectedToGroup = useCallback(
     (newGroup) => {
@@ -182,9 +180,9 @@ const GridDataUpdate = () => {
     setRowData(newStore);
   }, [rowData]);
 
-//   const onGroupingEnabled = useCallback((enabled) => {
-//     setGroupingEnabled(enabled, gridRef.current.columnApi);
-//   }, []);
+  //   const onGroupingEnabled = useCallback((enabled) => {
+  //     setGroupingEnabled(enabled, gridRef.current.columnApi);
+  //   }, []);
 
   const reverseItems = useCallback(() => {
     const reversedData = rowData.slice().reverse();
@@ -193,32 +191,38 @@ const GridDataUpdate = () => {
 
   const priceUpdateForOne = useCallback(() => {
     var rowNode = gridRef.current.api.getRowNode(rowData[0].symbol);
-    rowNode.setDataValue('price', Math.floor(Math.random() * 100000))
+    rowNode.setDataValue("price", Math.floor(Math.random() * 100000));
   }, [rowData]);
 
   const dataUpdateForOne = useCallback(() => {
     var rowNode = gridRef.current.api.getRowNode(rowData[0].symbol);
     rowNode.setData({
-        symbol: rowData[0].symbol,
-        price: Math.floor(Math.random() * 100000),
-        group: 'C'
-    })
+      symbol: rowData[0].symbol,
+      price: Math.floor(Math.random() * 100000),
+      group: "C",
+    });
 
-    gridRef.current.api.flashCells({ rowNodes: [rowNode], flashDelay: 3000,
-        fadeDelay: 100,});
+    gridRef.current.api.flashCells({
+      rowNodes: [rowNode],
+      flashDelay: 3000,
+      fadeDelay: 100,
+    });
   }, [rowData]);
-
 
   const onCellValueChanged = useCallback((params) => {
     var undoSize = gridRef.current.api.getCurrentUndoSize();
-    document.querySelector('#undoInput').value = undoSize;
-    document.querySelector('#undoBtn').disabled = undoSize < 1;
+
+    console.log(undoSize);
+
+    document.querySelector("#undoInput").value = undoSize;
+    document.querySelector("#undoBtn").disabled = undoSize < 1;
+
     var redoSize = gridRef.current.api.getCurrentRedoSize();
-    document.querySelector('#redoInput').value = redoSize;
-    document.querySelector('#redoBtn').disabled = redoSize < 1;
+
+    console.log(redoSize);
+    document.querySelector("#redoInput").value = redoSize;
+    document.querySelector("#redoBtn").disabled = redoSize < 1;
   }, []);
-
-
 
   const undo = useCallback(() => {
     gridRef.current.api.undoCellEditing();
@@ -228,14 +232,13 @@ const GridDataUpdate = () => {
     gridRef.current.api.redoCellEditing();
   }, []);
 
-
   const onPageSizeChanged = useCallback(() => {
-    var value = document.getElementById('page-size').value;
+    var value = document.getElementById("page-size").value;
     gridRef.current.api.paginationSetPageSize(value);
   }, []);
 
   const goToPageNumber = useCallback(() => {
-    var value = document.getElementById('page-number').value;
+    var value = document.getElementById("page-number").value;
     gridRef.current.api.paginationGoToPage(value - 1);
   }, []);
 
@@ -249,85 +252,92 @@ const GridDataUpdate = () => {
           flexDirection: 'column',
         }}
       > */}
-        {/* <div style={{ marginBottom: '5px', minHeight: '30px' }}> */}
-          <button onClick={reverseItems}>Reverse</button>
-          <button onClick={() => addFiveItems(true)}>Append</button>
-          <button onClick={() => addFiveItems(false)}>Prepend</button>
-          <button onClick={removeSelected}>Remove Selected</button>
-          <button onClick={updatePrices}>Update Prices</button>
-          <button onClick={priceUpdateForOne}>Set Price for 1st Data</button>
-          <button onClick={dataUpdateForOne}>Set Data for 1st Data</button>
+      {/* <div style={{ marginBottom: '5px', minHeight: '30px' }}> */}
+      <button onClick={reverseItems}>Reverse</button>
+      <button onClick={() => addFiveItems(true)}>Append</button>
+      <button onClick={() => addFiveItems(false)}>Prepend</button>
+      <button onClick={removeSelected}>Remove Selected</button>
+      <button onClick={updatePrices}>Update Prices</button>
+      <button onClick={priceUpdateForOne}>Set Price for 1st Data</button>
+      <button onClick={dataUpdateForOne}>Set Data for 1st Data</button>
 
-          {/* <button id="groupingOn" onClick={() => onGroupingEnabled(true)}>
+      {/* <button id="groupingOn" onClick={() => onGroupingEnabled(true)}>
             Grouping On
           </button>
           <button id="groupingOff" onClick={() => onGroupingEnabled(false)}>
             Grouping Off
           </button> */}
-          <span
-            style={{
-              border: '1px solid lightgrey',
-              marginLeft: '20px',
-              padding: '8px',
-              whiteSpace: 'nowrap',
-              display: 'inline-block',
-            }}
-          >
-            Move to Group:
-            <button onClick={() => setSelectedToGroup('A')}>A</button>
-            <button onClick={() => setSelectedToGroup('B')}>B</button>
-            <button onClick={() => setSelectedToGroup('C')}>C</button>
-          </span>
+      <span
+        style={{
+          border: "1px solid lightgrey",
+          marginLeft: "20px",
+          padding: "8px",
+          whiteSpace: "nowrap",
+          display: "inline-block",
+        }}
+      >
+        Move to Group:
+        <button onClick={() => setSelectedToGroup("A")}>A</button>
+        <button onClick={() => setSelectedToGroup("B")}>B</button>
+        <button onClick={() => setSelectedToGroup("C")}>C</button>
+      </span>
 
-          <label>Available Undo's</label>
-            <input id="undoInput" className="undo-redo-input" />
-            <label>Available Redo's</label>
-            <input id="redoInput" className="undo-redo-input" />
-            <button id="undoBtn" className="undo-btn" onClick={undo}>
-              Undo
-            </button>
-            <button id="redoBtn" className="redo-btn" onClick={redo}>
-              Redo
-            </button>
+      <label>Available Undo's</label>
+      <input id="undoInput" className="undo-redo-input" />
+      <label>Available Redo's</label>
+      <input id="redoInput" className="undo-redo-input" />
+      <button id="undoBtn" className="undo-btn" onClick={undo}>
+        Undo
+      </button>
+      <button id="redoBtn" className="redo-btn" onClick={redo}>
+        Redo
+      </button>
 
-
-            <input type="number" id="page-size" placeholder="Page Size" onChange={onPageSizeChanged}/>
-            <input type="number" id="page-number" placeholder="Go To Page" onChange={goToPageNumber}/>
-        {/* </div> */}
-        {/* <div> */}
-          <div style={{width: 1200, height: 500}} className="ag-theme-alpine">
-            <AgGridReact
-              ref={gridRef}
-              rowData={rowData}
-              columnDefs={columnDefs}
-              defaultColDef={defaultColDef}
-              animateRows={true}
-              rowSelection={'multiple'}
-              enterMovesDown={true}
-              enterMovesDownAfterEdit={true}
-              undoRedoCellEditing={true}
-              undoRedoCellEditingLimit={5}
-              enableCellChangeFlash={true}
-              onCellValueChanged={onCellValueChanged}
-              editType={'fullRow'}
-              paginationAutoPageSize={true}
-              pagination={true}
-              paginationPageSize={10}
-            //   autoGroupColumnDef={autoGroupColumnDef}
-            //   statusBar={statusBar}
-            //   groupDefaultExpanded={1}
-              getRowId={getRowId}
-            //   cellFlashDelay={2000}
-            //   cellFadeDelay={500}
-            //   onGridReady={onGridReady}
-            ></AgGridReact>
-          </div>
-        {/* </div> */}
+      <input
+        type="number"
+        id="page-size"
+        placeholder="Page Size"
+        onChange={onPageSizeChanged}
+      />
+      <input
+        type="number"
+        id="page-number"
+        placeholder="Go To Page"
+        onChange={goToPageNumber}
+      />
+      {/* </div> */}
+      {/* <div> */}
+      <div style={{ width: 1200, height: 500 }} className="ag-theme-alpine">
+        <AgGridReact
+          ref={gridRef}
+          rowData={rowData}
+          columnDefs={columnDefs}
+          defaultColDef={defaultColDef}
+          animateRows={true}
+          rowSelection={"multiple"}
+          enterMovesDown={true}
+          enterMovesDownAfterEdit={true}
+          undoRedoCellEditing={true}
+          undoRedoCellEditingLimit={5}
+          enableCellChangeFlash={true}
+          onCellValueChanged={onCellValueChanged}
+          editType={"fullRow"}
+          paginationAutoPageSize={true}
+          pagination={true}
+          paginationPageSize={10}
+          //   autoGroupColumnDef={autoGroupColumnDef}
+          //   statusBar={statusBar}
+          //   groupDefaultExpanded={1}
+          getRowId={getRowId}
+          //   cellFlashDelay={2000}
+          //   cellFadeDelay={500}
+          //   onGridReady={onGridReady}
+        ></AgGridReact>
+      </div>
+      {/* </div> */}
       {/* </div> */}
     </div>
   );
 };
-
-
 
 export default GridDataUpdate;
