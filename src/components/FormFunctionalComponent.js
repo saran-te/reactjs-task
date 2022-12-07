@@ -5,7 +5,7 @@ import { addDetails } from "../redux/formFunc/formActions";
 import store from "../redux/store";
 
 const FormFunctionalComponent = () => {
-  const [data, setData] = useState(initialState);
+  const [data, setData] = useState({});
   const dispatch = useDispatch();
 
   const fNameHandler = (e) => {

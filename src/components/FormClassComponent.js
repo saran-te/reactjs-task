@@ -1,15 +1,13 @@
 import { Component } from "react";
 import { connect } from "react-redux";
-import { initialState } from "../redux/formClass/form2Reducer";
+// import { initialState } from "../redux/formClass/form2Reducer";
 import { addDetails } from "../redux/formClass/formActions";
 import store from "../redux/store";
 
 class FormClassComponent extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      ...initialState
-    };
+    this.state = {};
   }
 
   formSubmitHandler = (e) => {
@@ -62,7 +60,7 @@ class FormClassComponent extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addDetails: (data) => dispatch(addDetails(data))
+    addDetails: (data) => dispatch(addDetails(data)),
   };
 };
 

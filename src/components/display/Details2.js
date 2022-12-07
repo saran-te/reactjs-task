@@ -7,13 +7,21 @@ class Details2 extends Component {
     this.state = {};
   }
 
+  displayData = this.props.datas.map((data) => {
+    return (
+      <div>
+        <p>{data.email}</p>
+        <p>{data.mob}</p>
+        <p>{data.city}</p>
+      </div>
+    );
+  });
+
   render() {
     return (
       <>
         <h1>Details 2</h1>
-        <p>{this.props.data.mob}</p>
-        <p>{this.props.data.email}</p>
-        <p>{this.props.data.city}</p>
+        {this.displayData}
       </>
     );
   }
@@ -21,9 +29,7 @@ class Details2 extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    data: {
-      ...state.form2
-    }
+    datas: [...state.form2],
   };
 };
 

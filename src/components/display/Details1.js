@@ -3,15 +3,24 @@ import { useNavigate } from "react-router-dom";
 
 const Details1 = () => {
   const navigate = useNavigate();
-  const data = useSelector((state) => state.form1);
+  const datas = useSelector((state) => state.form1);
+
+  let displayData = datas.map((data) => {
+    return (
+      <div>
+        <p>{data.fName}</p>
+        <p>{data.lName}</p>
+        <p>{data.age}</p>
+        <p>{data.dob}</p>
+      </div>
+    );
+  });
 
   return (
     <>
       <h1>Details 1</h1>
-      <p>{data.fName}</p>
-      <p>{data.lName}</p>
-      <p>{data.age}</p>
-      <p>{data.dob}</p>
+
+      {displayData}
 
       <button type="button" onClick={() => navigate("/grid-data")}>
         Go to Grid
