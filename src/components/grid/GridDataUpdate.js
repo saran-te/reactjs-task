@@ -230,6 +230,7 @@ const GridDataUpdate = () => {
 
   const redo = useCallback(() => {
     gridRef.current.api.redoCellEditing();
+    console.log("success");
   }, []);
 
   const onPageSizeChanged = useCallback(() => {
