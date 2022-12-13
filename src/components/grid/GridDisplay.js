@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 // import { useSelector, connect } from 'react-redux';
 import { AgGridReact } from "ag-grid-react";
 // import { fetchData, fetchDataWithAxios } from '../../redux/usersData/userReducer';
+import "ag-grid-enterprise";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 // import store from '../../redux/store';
@@ -29,6 +30,8 @@ const simpleComp = (p) => {
 
 const GridDisplay = (props) => {
   // const users = useSelector((state) => state.user);
+  const [gridApi, setGridApi] = useState(null);
+  const [gridColumnApi, setGridColumnApi] = useState(null);
   const [rowData, setRowData] = useState([]);
   const gridRef = useRef();
 
@@ -36,8 +39,23 @@ const GridDisplay = (props) => {
   const groupHeaderHeight = 25;
   const floatingFiltersHeight = 70;
 
+  const onGridReady = (params) => {
+    setGridApi(params.api);
+    setGridColumnApi(params.columnApi);
+  };
+
   const [columnDefs, setColumnDefs] = useState([
-    { headerName: "Row ID", field: "id", valueGetter: "node.id" },
+    {
+      headerName: "Row ID",
+      field: "id",
+      valueGetter: "node.id",
+      cellClass: "redFont",
+      cellClassRules: {
+        greenBackground: (params) => {
+          return params.value % 2 === 0;
+        },
+      },
+    },
     {
       field: "name",
       width: 150,
@@ -149,9 +167,131 @@ const GridDisplay = (props) => {
       },
       floatingFilter: true,
       enableRowGroup: true,
+
+      cellClassRules: {
+        darkGreyBackground: function (params) {
+          return params.rowIndex % 2 == 0;
+        },
+      },
     }),
     []
   );
+
+  const excelStyles = [
+    {
+      id: "greenBackground",
+      interior: {
+        color: "#b5e6b5",
+        pattern: "Solid",
+      },
+    },
+    {
+      id: "redFont",
+      font: {
+        fontName: "Calibri Light",
+        underline: "Single",
+        italic: true,
+        color: "#ff0000",
+      },
+    },
+    {
+      id: "darkGreyBackground",
+      interior: {
+        color: "#888888",
+        pattern: "Solid",
+      },
+      font: {
+        fontName: "Calibri Light",
+        color: "#ffffff",
+      },
+    },
+    {
+      id: "boldBorders",
+      borders: {
+        borderBottom: {
+          color: "#000000",
+          lineStyle: "Continuous",
+          weight: 3,
+        },
+        borderLeft: {
+          color: "#000000",
+          lineStyle: "Continuous",
+          weight: 3,
+        },
+        borderRight: {
+          color: "#000000",
+          lineStyle: "Continuous",
+          weight: 3,
+        },
+        borderTop: {
+          color: "#000000",
+          lineStyle: "Continuous",
+          weight: 3,
+        },
+      },
+    },
+    {
+      id: "header",
+      interior: {
+        color: "#CCCCCC",
+        pattern: "Solid",
+      },
+      alignment: {
+        horizontal: "Center",
+        vertical: "Center",
+      },
+
+      font: {
+        bold: true,
+        color: "#eb0c22",
+        fontName: "Ariel",
+        italic: true,
+        outline: true,
+        shadow: true,
+        size: 18,
+        underline: "Superscript",
+      },
+      borders: {
+        borderBottom: {
+          color: "#5687f5",
+          lineStyle: "Continuous",
+          weight: 1,
+        },
+        borderLeft: {
+          color: "#5687f5",
+          lineStyle: "Continuous",
+          weight: 1,
+        },
+        borderRight: {
+          color: "#5687f5",
+          lineStyle: "Continuous",
+          weight: 1,
+        },
+        borderTop: {
+          color: "#5687f5",
+          lineStyle: "Continuous",
+          weight: 1,
+        },
+      },
+    },
+    {
+      id: "dateFormat",
+      dataType: "dateTime",
+      numberFormat: { format: "mm/dd/yyyy;@" },
+    },
+    {
+      id: "twoDecimalPlaces",
+      numberFormat: { format: "#,##0.00" },
+    },
+    {
+      id: "textFormat",
+      dataType: "string",
+    },
+    {
+      id: "bigHeader",
+      font: { size: 20, color: "#1fb547" },
+    },
+  ];
 
   const isRowSelectable = useMemo(() => {
     return (params) => {
@@ -265,6 +405,42 @@ const GridDisplay = (props) => {
     };
   }, []);
 
+  const onExportBtn = () => {
+    var params = {
+      columnWidth: 150,
+      headerRowHeight: 50,
+      rowHeight: 40,
+      sheetName: "Grid-Data",
+      customHeader: [
+        [
+          {
+            styleId: "bigHeader",
+            data: {
+              type: "string",
+              value: "Content CustomHeader",
+            },
+            mergeAcross: 3,
+          },
+        ],
+        [],
+      ],
+      customFooter: [
+        [],
+        [
+          {
+            styleId: "bigHeader",
+            data: {
+              type: "string",
+              value: "CustomFooter",
+            },
+          },
+        ],
+      ],
+    };
+
+    gridApi.exportDataAsExcel(params);
+  };
+
   return (
     <>
       <button type="button" onClick={saveState}>
@@ -306,6 +482,13 @@ const GridDisplay = (props) => {
       <button type="button" onClick={forEachLeafNodeHandler}>
         For Each Leaf Node
       </button>
+
+      <button
+        onClick={() => onExportBtn()}
+        style={{ margin: "5px", fontWeight: "bold" }}
+      >
+        Export to Excel
+      </button>
       {/* <button type='button' onClick={onBtnGrpEmailWebsite}>Group Email - Website</button> */}
 
       <div className="ag-theme-alpine" style={{ width: 1200, height: 1000 }}>
@@ -326,6 +509,8 @@ const GridDisplay = (props) => {
           isRowSelectable={isRowSelectable}
           // loadingCellRenderer={loadingCellRenderer}
           // loadingCellRendererParams={loadingCellRendererParams}
+          onGridReady={onGridReady}
+          excelStyles={excelStyles}
         ></AgGridReact>
       </div>
     </>
