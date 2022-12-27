@@ -10,7 +10,6 @@ import axios from "axios";
 import CustomLoadingCellRenderer from "./CustomLoadingCellRenderer";
 
 const simpleComp = (p) => {
-  console.log(p.btnName);
   return (
     <>
       <button onClick={() => alert(`${p.value}`)}>{p.btnName}</button>
@@ -289,7 +288,7 @@ const GridDisplay = (props) => {
     },
     {
       id: "bigHeader",
-      font: { size: 20, color: "#1fb547" },
+      font: { size: 12, color: "#1fb547" },
     },
   ];
 
@@ -416,7 +415,7 @@ const GridDisplay = (props) => {
           {
             styleId: "bigHeader",
             data: {
-              type: "string",
+              type: "String",
               value: "Content CustomHeader",
             },
             mergeAcross: 3,
@@ -507,10 +506,11 @@ const GridDisplay = (props) => {
           rowDragManaged={true}
           rowMultiSelectWithClick={true}
           isRowSelectable={isRowSelectable}
-          // loadingCellRenderer={loadingCellRenderer}
-          // loadingCellRendererParams={loadingCellRendererParams}
+          loadingCellRenderer={loadingCellRenderer}
+          loadingCellRendererParams={loadingCellRendererParams}
           onGridReady={onGridReady}
           excelStyles={excelStyles}
+          sideBar={true}
         ></AgGridReact>
       </div>
     </>

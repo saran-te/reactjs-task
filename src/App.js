@@ -5,6 +5,7 @@ import GridDisplay from "./components/grid/GridDisplay";
 import GridDataUpdate from "./components/grid/GridDataUpdate";
 import OrgHierarchy1 from "./components/TreeData/OrgHierarchy1";
 import FileExample from "./components/TreeData/FileExample";
+import Ssrm from "./components/ssrm/Ssrm";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="update-data" element={<GridDataUpdate />} />
           <Route path="org-tree-data" element={<OrgHierarchy1 />} />
           <Route path="file-tree-data" element={<FileExample />} />
+          <Route path="ssrm" element={<Ssrm />} />
         </Routes>
       </div>
     </BrowserRouter>

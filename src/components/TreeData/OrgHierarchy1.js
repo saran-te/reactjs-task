@@ -14,7 +14,7 @@ const OrgHierarchy1 = () => {
     // we're using the auto group column by default!
     { field: "jobTitle" },
     { field: "employmentType" },
-    { field: "salary", aggFunc: "sum" },
+    { headerName: "Sum(Salary)", field: "salary", aggFunc: "sum" },
   ]);
 
   const defaultColDef = useMemo(() => {
@@ -34,6 +34,7 @@ const OrgHierarchy1 = () => {
       },
     };
   }, []);
+
   const getDataPath = useMemo(() => {
     return (data) => {
       return data.orgHierarchy;
@@ -41,7 +42,6 @@ const OrgHierarchy1 = () => {
   }, []);
 
   const onFilterTextBoxChanged = useCallback(() => {
-    console.log(rowData);
     gridRef.current.api.setQuickFilter(
       document.getElementById("filter-text-box").value
     );

@@ -2,7 +2,7 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
-// import 'ag-grid-enterprise';
+import "ag-grid-enterprise";
 
 // creates a unique symbol, eg 'ADG' or 'ZJD'
 function createUniqueRandomSymbol(data) {
@@ -68,6 +68,14 @@ function createItem(data) {
 //   element.style.display = visible ? 'inline' : 'none';
 // }
 
+const createFlagImg = (flag) => {
+  return (
+    '<img border="0" width="15" height="10" src="https://flags.fmcdn.net/data/flags/mini/' +
+    flag +
+    '.png"/>'
+  );
+};
+
 const GridDataUpdate = () => {
   const gridRef = useRef(null);
   const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
@@ -90,18 +98,21 @@ const GridDataUpdate = () => {
       enableCellChangeFlash: true,
     };
   }, []);
-  //   const autoGroupColumnDef = useMemo(() => {
-  //     return {
-  //       headerName: 'Symbol',
-  //       cellRenderer: 'agGroupCellRenderer',
-  //       field: 'symbol',
-  //     };
-  //   }, []);
-  //   const statusBar = useMemo(() => {
-  //     return {
-  //       statusPanels: [{ statusPanel: 'agAggregationComponent', align: 'right' }],
-  //     };
-  //   }, []);
+
+  const autoGroupColumnDef = useMemo(() => {
+    return {
+      headerName: "Symbol",
+      cellRenderer: "agGroupCellRenderer",
+      field: "symbol",
+    };
+  }, []);
+
+  // const statusBar = useMemo(() => {
+  //   return {
+  //     statusPanels: [{ statusPanel: "agAggregationComponent", align: "right" }],
+  //   };
+  // }, []);
+
   const getRowId = useCallback(function (params) {
     return params.data.symbol;
   }, []);
@@ -243,6 +254,144 @@ const GridDataUpdate = () => {
     gridRef.current.api.paginationGoToPage(value - 1);
   }, []);
 
+  const getContextMenuItems = useCallback((params) => {
+    var result = [
+      {
+        // custom item
+        name: "Alert " + params.value,
+        action: function () {
+          window.alert("Alerting about " + params.value);
+        },
+        cssClasses: ["redFont", "bold"],
+      },
+      {
+        // custom item
+        name: "Always Disabled",
+        disabled: true,
+        tooltip:
+          "Very long tooltip, did I mention that I am very long, well I am! Long!  Very Long!",
+      },
+      {
+        name: "Country",
+        subMenu: [
+          {
+            name: "Ireland",
+            action: function () {
+              alert("Ireland was pressed");
+            },
+            icon: createFlagImg("ie"),
+          },
+          {
+            name: "UK",
+            action: function () {
+              alert("UK was pressed");
+            },
+            icon: createFlagImg("gb"),
+          },
+          {
+            name: "France",
+            action: function () {
+              alert("France was pressed");
+            },
+            icon: createFlagImg("fr"),
+          },
+        ],
+      },
+      {
+        name: "Person",
+        subMenu: [
+          {
+            name: "Niall",
+            action: function () {
+              alert("Niall was pressed");
+            },
+          },
+          {
+            name: "Sean",
+            action: function () {
+              alert("Sean was pressed");
+            },
+          },
+          {
+            name: "John",
+            action: function () {
+              alert("John was pressed");
+            },
+          },
+          {
+            name: "Alberto",
+            action: function () {
+              alert("Alberto was pressed");
+            },
+          },
+          {
+            name: "Tony",
+            action: function () {
+              alert("Tony was pressed");
+            },
+          },
+          {
+            name: "Andrew",
+            action: function () {
+              alert("Andrew was pressed");
+            },
+          },
+          {
+            name: "Kev",
+            action: function () {
+              alert("Kev was pressed");
+            },
+          },
+          {
+            name: "Will",
+            action: function () {
+              alert("Will was pressed");
+            },
+          },
+          {
+            name: "Armaan",
+            action: function () {
+              alert("Armaan was pressed");
+            },
+          },
+        ],
+      },
+      "separator",
+      {
+        // custom item
+        name: "Windows",
+        shortcut: "Alt + W",
+        action: function () {
+          alert("Windows Item Selected");
+        },
+        icon: '<img src="https://www.ag-grid.com/example-assets/skills/windows.png" />',
+      },
+      {
+        // custom item
+        name: "Mac",
+        shortcut: "Alt + M",
+        action: function () {
+          console.log("Mac Item Selected");
+        },
+        icon: '<img src="https://www.ag-grid.com/example-assets/skills/mac.png"/>',
+      },
+      "separator",
+      {
+        // custom item
+        name: "Checked",
+        checked: true,
+        action: function () {
+          console.log("Checked Selected");
+        },
+        icon: '<img src="https://www.ag-grid.com/example-assets/skills/mac.png"/>',
+      },
+      "copy",
+      "separator",
+      "chartRange",
+    ];
+    return result;
+  }, []);
+
   return (
     <div style={containerStyle}>
       {/* <div
@@ -326,13 +475,14 @@ const GridDataUpdate = () => {
           paginationAutoPageSize={true}
           pagination={true}
           paginationPageSize={10}
-          //   autoGroupColumnDef={autoGroupColumnDef}
-          //   statusBar={statusBar}
+          autoGroupColumnDef={autoGroupColumnDef}
+          // statusBar={statusBar}
           //   groupDefaultExpanded={1}
           getRowId={getRowId}
           //   cellFlashDelay={2000}
           //   cellFadeDelay={500}
           //   onGridReady={onGridReady}
+          getContextMenuItems={getContextMenuItems}
         ></AgGridReact>
       </div>
       {/* </div> */}
