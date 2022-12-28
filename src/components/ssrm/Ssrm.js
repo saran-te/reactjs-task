@@ -18,11 +18,12 @@ function Ssrm() {
   const gridRef = useRef(null);
 
   const [columnDefs, setColumnDefs] = useState([
-    { field: "athlete", filter: "agTextColumnFilter" },
+    { field: "athlete", filter: "agTextColumnFilter", checkboxSelection: true },
     {
       field: "country",
       rowGroup: true,
-      // hide: true,
+      hide: true,
+      // checkboxSelection: true,
       filter: "agSetColumnFilter",
       filterParams: {
         values: (params) => {
@@ -74,7 +75,7 @@ function Ssrm() {
   };
 
   const getServerSideGroupLevelParams = useCallback((params) => {
-    var noGroupingActive = params.rowGroupColumns.length == 0;
+    var noGroupingActive = params.rowGroupColumns.length === 0;
     var res;
     if (noGroupingActive) {
       res = {
@@ -93,7 +94,7 @@ function Ssrm() {
       } else {
         res = {
           infiniteScroll: true,
-          cacheBlockSize: params.level === 1 ? 5 : 2,
+          cacheBlockSize: params.level === 1 ? 5 : 10,
           maxBlocksInCache: -1,
         };
       }
@@ -129,7 +130,7 @@ function Ssrm() {
 
   const onBtExpandTopLevel = useCallback(() => {
     gridRef.current.api.forEachNode(function (node) {
-      if (node.group && node.level == 0) {
+      if (node.group && node.level === 0) {
         node.setExpanded(true);
       }
     });
@@ -139,6 +140,21 @@ function Ssrm() {
     // console.log(data);
 
     return data ? data.childCount : undefined;
+  }, []);
+
+  const autoGroupColumnDef = useMemo(() => {
+    return {
+      headerName: "Country",
+      minWidth: 300,
+      cellRendererParams: {
+        //   suppressCount: true,
+        checkbox: true,
+      },
+    };
+  }, []);
+
+  const getRowId = useMemo(() => {
+    return (params) => params.data.country;
   }, []);
 
   const onGridReady = useCallback((params) => {
@@ -159,6 +175,7 @@ function Ssrm() {
         <AgGridReact
           ref={gridRef}
           onGridReady={onGridReady}
+          // getRowId={getRowId}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
           rowSelection={"multiple"}
@@ -173,6 +190,11 @@ function Ssrm() {
           isServerSideGroupOpenByDefault={isServerSideGroupOpenByDefault}
           getChildCount={getChildCount}
           // serverSideInitialRowCount={15}
+          pagination={true}
+          paginationAutoPageSize={true}
+          paginateChildRows={true}
+          groupSelectsChildren={true}
+          autoGroupColumnDef={autoGroupColumnDef}
         ></AgGridReact>
       </div>
     </>
